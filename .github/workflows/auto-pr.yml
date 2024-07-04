@@ -1,0 +1,20 @@
+name: Create production promotion pull request
+on:
+  push:
+    branches:
+      - daily_build_branch
+jobs:
+  productionPromotion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test_branch
+      - name: Reset promotion branch
+        run: |
+          git fetch origin daily_build_branch:daily_build_branch
+          git reset --hard daily_build_branch
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: test_branch-promotion
